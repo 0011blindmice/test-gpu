@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nvidia-smi
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: nvidia-smi
+    image: nvidia/cuda:11.2.0-base-ubuntu18.04
+    command: [ "/bin/bash", "-c", "--" ]
+    args:
+    - "while true; do nvidia-smi; sleep 10; done"
+    resources:
+      limits:
+        nvidia.com/gpu: 1
+  nodeSelector:
+    procore.com/node-group: gpu_optimized
+  tolerations:
+  - key: "procore.com/node-group"
+    operator: "Equal"
+    value: "gpu_optimized"
+    effect: "NoSchedule"
